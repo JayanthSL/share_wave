@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Share Wave</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='fontawesome-5.5/css/all.min.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/bootstrap.min.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/tooplate-infinite-loop.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <style>
+      .popup {
+        display: none;
+        position: fixed;
+        z-index: 9;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+      .popup-content {
+        background-color: white;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 300px;
+      }
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      @keyframes fileSharing {
+        0% {
+          transform: translateX(-100%);
+          opacity: 0;
+        }
+        100% {
+          transform: translateX(0%);
+          opacity: 1;
+        }
+      }
+
+      .file-sharing-container {
+        margin-top: 30px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .file-sharing {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        animation: fileSharing 1.5s ease-out forwards;
+      }
+
+      @keyframes lineAnimation {
+        0% {
+          width: 0;
+          opacity: 0;
+        }
+        100% {
+          width: 100%;
+          opacity: 1;
+        }
+      }
+
+      .animated-line {
+        height: 2px;
+        background-color: #fff;
+        animation: lineAnimation 1.5s ease-out forwards;
+        margin-top: 20px; /* Adjust spacing */
+      }
+    </style>
+  </head>
+  <body>
+    <section id="infinite" class="text-white tm-font-big tm-parallax">
+      <div class="text-center tm-hero-text-container">
+        <div class="tm-hero-text-container-inner">
+          <h2 class="tm-hero-title animate__animated animate__fadeInDown">
+            Share Wave
+          </h2>
+          <p class="tm-hero-subtitle animate__animated animate__fadeInUp">
+            Begin Your File Sharing
+            <br />Click the Arrow Below
+          </p>
+        </div>
+        <div class="animated-line"></div>
+      </div>
+
+      <div class="tm-next tm-intro-next">
+        <a
+          href="javascript:void(0);"
+          class="text-center tm-down-arrow-link"
+          onclick="showPopup()"
+        >
+          <i class="fas fa-2x fa-arrow-down tm-down-arrow"></i>
+        </a>
+      </div>
+    </section>
+
+    <div id="myPopup" class="popup">
+      <div class="popup-content">
+        <span class="close" onclick="hidePopup()">&times;</span>
+        <p>Enter your name:</p>
+        <input type="text" id="name" name="name" />
+        <p>Enter or Generate a PIN:</p>
+        <input type="text" id="pin" name="pin" />
+        <button onclick="generatePin()">Generate PIN</button>
+        <button onclick="submitName()">Go</button>
+      </div>
+    </div>
+
+    <script>
+      function showPopup() {
+        document.getElementById("myPopup").style.display = "block";
+      }
+
+      function hidePopup() {
+        document.getElementById("myPopup").style.display = "none";
+      }
+
+      function submitName() {
+        var name = document.getElementById("name").value;
+        var pin = document.getElementById("pin").value;
+        if (name.trim() !== "" && pin.trim() !== "") {
+          localStorage.setItem("userName", name);
+          localStorage.setItem("userPin", pin);
+          hidePopup();
+          window.location.href = "/upload_page";
+        } else {
+          alert("Please enter your name and PIN.");
+        }
+      }
+
+      function generatePin() {
+        var pin = Math.floor(1000 + Math.random() * 9000);
+        document.getElementById("pin").value = pin;
+        localStorage.setItem("userPin", pin);
+      }
+    </script>
+  </body>
+</html>
