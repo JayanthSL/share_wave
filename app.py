@@ -24,10 +24,11 @@ def generate_qr(data):
     )
     qr.add_data(data)
     qr.make(fit=True)
-    img = qr.make_image(fill_color="black", back_color="white")
+    img = qr.make_image(fill="black", back_color="white")
     buffer = io.BytesIO()
     img.save(buffer, format="PNG")
-    return base64.b64encode(buffer.getvalue()).decode()
+    buffer.seek(0)
+    return base64.b64encode(buffer.getvalue()).decode("utf-8")
 
 
 @app.route("/")
@@ -39,6 +40,7 @@ def get_name():
 def index():
     files = os.listdir(UPLOAD_FOLDER)
     qr_upload = generate_qr(request.host_url + "upload/")
+    print(qr_upload)
     return render_template_string(
         """
         <!doctype html>
@@ -274,4 +276,4 @@ def clear_uploads_folder_route():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000)
+    app.run(debug=False, host="0.0.0.0", port=8000)
